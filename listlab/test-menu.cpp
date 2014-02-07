@@ -153,6 +153,8 @@ int main(int argc, char **argv){
 					cout << "Value: ";
 					int v;
 					cin >> v;
+					cin.clear();
+					cin.ignore(256, '\n');
 					l.del_by_val(v);
 					cout << l;
 					cout << "Number of seeks: " << l.get_seek_num() << endl;
