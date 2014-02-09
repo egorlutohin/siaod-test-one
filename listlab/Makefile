@@ -1,5 +1,5 @@
 all:
-	@echo "make list-test|speed-test|test-menu"
+	@echo "make list-test|speed-test|test-menu|unittests"
 
 list-test: test.exe
 test.exe: mylist.h test.cpp
@@ -18,3 +18,9 @@ test-menu: test-menu.cpp mylist.h
 	
 clean-test-menu:
 	rm -f test-menu
+
+unittests: unittests.cpp mylist.h
+	g++ -g -o unittests unittests.cpp -lgtest -lpthread
+
+clean-unittests:
+	rm -f unittests
