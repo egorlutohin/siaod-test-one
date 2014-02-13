@@ -11,6 +11,8 @@ class List {
 	T *arr;
 	int *index_arr;
 
+	T& _get_value_by_number(int);
+
 public:
 	List(int); // конструктор
 	~List(); // деструктор
@@ -19,11 +21,25 @@ public:
 	bool is_empty(); // + проверка списка на пустоту
 	void insert(const T &); // + включение нового значения
 	int get_storage_size(); // максимальный размер списка
-	T get_value_by_number(int); // + получение значения с заданным номером в списке
+	T get_value_by_number(int n){
+		return _get_value_by_number(n);
+	} // + получение значения с заданным номером в списке
 	T operator[](int i) {
 		return this->get_value_by_number(i);
 	}
-	bool has_value(const T&); // + опрос наличия заданного значения
+	bool has_value(const T&, int*); // + опрос наличия заданного значения
+	void change_value_by_number(const int n, const T& v){
+		_get_value_by_number(n) = v;
+	}
+
+	int get_value_position(const T& v){
+		int p;
+		bool hv = has_value(v, &p);
+		if (hv)
+			return p;
+		else
+			return -1;
+	}
 
 	class Iterator {
 		List<T> *l;
@@ -37,6 +53,9 @@ public:
 		T& operator*(); // доступ к данным текукщего элемента
 		bool in_begin(); // итератор в начале
 		bool in_boundary(); //
+		int get_current_position() {
+			return position_counter;
+		}
 	};
 	friend class Iterator;
 };
@@ -63,6 +82,8 @@ template <typename T> void List<T>::Iterator::next(){
 }
 
 template <typename T> T& List<T>::Iterator::get_current_value(){
+	if (l->is_empty())
+		throw "Список пуст";
 	return l->arr[current_index];
 }
 
@@ -150,7 +171,7 @@ template <typename T> int List<T>::get_storage_size(){
 	return storage_size;
 }
 
-template <typename T> T List<T>::get_value_by_number(int n){
+template <typename T> T& List<T>::_get_value_by_number(int n){
 	if(n < 0)
 		throw "Индекс не может быть отрицательным";
 
@@ -166,12 +187,17 @@ template <typename T> T List<T>::get_value_by_number(int n){
 	return *iterator;
 }
 
-template <typename T> bool List<T>::has_value(const T& v){
+template <typename T> bool List<T>::has_value(const T& v, int *p = NULL){
 	List<T>::Iterator i(this);
 
 	for(i.begin(); i.in_boundary(); i.next())
 		if (*i == v) {
+			if(p != NULL) {
+				*p = i.get_current_position();
+			}
 			return true;
 		}
+
+	return false;
 }
 #endif

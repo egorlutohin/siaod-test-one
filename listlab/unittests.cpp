@@ -72,6 +72,9 @@ TEST(ListTestCase, GetValueByNumberTest) {
 	EXPECT_THROW(l->get_value_by_number(10), const char *);
 
 	EXPECT_EQ((*l)[4], 50);
+	int i = (*l)[4]; // i = 50
+	i = 60;
+	EXPECT_EQ((*l)[4], 50);
 
 	delete l;
 }
@@ -93,6 +96,37 @@ TEST(ListTestCase, HasValueTest) {
 
 	delete l;
 
+}
+
+TEST(ListTestCase, ChangeValueByNumberTest){
+	List<int> *l = new List<int>(10);
+
+	for(int i = 10; i <= 100; i+=10)
+		l->insert(i);
+	// l = 10 20 30 40 50 60 70 80 90 100
+
+	EXPECT_EQ(l->get_value_by_number(3), 40);
+	l->change_value_by_number(4, 140);
+	EXPECT_EQ(l->get_value_by_number(4), 140);
+
+	EXPECT_THROW(l->change_value_by_number(20, 444), const char *);
+	EXPECT_THROW(l->change_value_by_number(-10, -10), const char *);
+}
+
+TEST(ListTestCase, GetValuePositionTest) {
+	List<int> *l = new List<int>(10);
+
+	for(int i = 10; i <= 100; i+=10)
+		l->insert(i);
+	// l = 10 20 30 40 50 60 70 80 90 100
+
+	EXPECT_EQ(l->get_value_position(10), 0);
+	EXPECT_EQ(l->get_value_position(100), 9);
+	EXPECT_EQ(l->get_value_position(50), 4);
+
+	EXPECT_EQ(l->get_value_position(1000), -1);
+
+	delete l;
 }
 
 TEST(IteratorTestCase, IteratorTest){
@@ -125,6 +159,26 @@ TEST(IteratorTestCase, IteratorTest){
 
 	delete l, i;
 
+}
+
+TEST(IteratorTestCase, EmptyIteratorTest) {
+	List<int> *l = new List<int>(100);
+
+	List<int>::Iterator *i = new List<int>::Iterator(l);
+
+	i->next(); i->next(); i->next();
+
+	EXPECT_THROW(i->get_current_value(), const char *);
+	EXPECT_THROW(l->get_value_by_number(0), const char *);
+
+	i->in_begin(); i->in_boundary();
+
+	int j = 0;
+	for(i->begin(); i->in_boundary(); i->next())
+		j++;
+	EXPECT_EQ(j, 0);
+
+	delete l, i;
 }
 
 int main(int argc, char **argv){
