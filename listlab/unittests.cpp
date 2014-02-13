@@ -129,6 +129,48 @@ TEST(ListTestCase, GetValuePositionTest) {
 	delete l;
 }
 
+TEST(ListTestCase, InsertByNumberTest) {
+
+	List<int> *l = new List<int>(10);
+
+	EXPECT_THROW(l->insert_by_number(1, 1000), const char *);
+
+	for(int i = 10; i <= 100; i+=10)
+		l->insert(i);
+	// l = 10 20 30 40 50 60 70 80 90 100
+
+	EXPECT_THROW(l->insert_by_number(10, 2000), const char *);
+
+	delete l;
+
+	l = new List<int>(100);
+	l->insert_by_number(0, 10);
+
+	for(int i = 20; i <= 100; i+=10)
+		l->insert(i);
+	// l = 10 20 30 40 50 60 70 80 90 100
+
+	l->insert_by_number(0, 0);
+	// l = 0 10 20 30 40 50 60 70 80 90 100
+	EXPECT_EQ(l->get_value_by_number(0), 0);
+	EXPECT_EQ(l->get_value_by_number(1), 10);
+	EXPECT_EQ(l->get_value_by_number(10), 100);
+
+	l->insert_by_number(3, 25);
+	// l = 0 10 20 25 30 40 50 60 70 80 90 100
+	EXPECT_EQ(l->get_value_by_number(2), 20);
+	EXPECT_EQ(l->get_value_by_number(3), 25);
+	EXPECT_EQ(l->get_value_by_number(4), 30);
+	EXPECT_EQ(l->get_value_by_number(11), 100);
+
+	l->insert_by_number(11, 95);
+	// l = 0 10 20 25 30 40 50 60 70 80 90 95 100
+	EXPECT_EQ(l->get_value_by_number(11), 95);
+	EXPECT_EQ(l->get_value_by_number(12), 100);
+
+	delete l;
+}
+
 TEST(IteratorTestCase, IteratorTest){
 
 	List<int> *l = new List<int>(100);

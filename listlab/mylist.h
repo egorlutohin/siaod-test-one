@@ -35,11 +35,14 @@ public:
 	int get_value_position(const T& v){
 		int p;
 		bool hv = has_value(v, &p);
+
 		if (hv)
 			return p;
 		else
 			return -1;
 	}
+
+	void insert_by_number(int, const T&); // + включение нового значения в позицию с заданным номером
 
 	class Iterator {
 		List<T> *l;
@@ -200,4 +203,9 @@ template <typename T> bool List<T>::has_value(const T& v, int *p = NULL){
 
 	return false;
 }
+
+template <typename T> void List<T>::insert_by_number(int p, const T& v) {
+	return;
+}
+
 #endif
