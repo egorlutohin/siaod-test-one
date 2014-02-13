@@ -28,15 +28,15 @@ public:
 	class Iterator {
 		List<T> *l;
 		int current_index;
+		int position_counter;
 	public:
 		Iterator(List<T> *);
 		void begin(); // установка итератора на первый элемент списка
-		//void end(); // установка итератора на конец списка
 		void next(); // перевод итератора на конец списка
 		T& get_current_value(); // доступ к данным текущего элемента
 		T& operator*(); // доступ к данным текукщего элемента
-		bool is_begin(); // итератор в начале
-		bool is_end(); // итератор в конце
+		bool in_begin(); // итератор в начале
+		bool in_boundary(); //
 	};
 	friend class Iterator;
 };
@@ -49,13 +49,16 @@ template <typename T> List<T>::Iterator::Iterator(List<T> *ptr):
 
 template <typename T> void List<T>::Iterator::begin(){
 	current_index = l->head_index;
+	position_counter = 0;
 }
 
 template <typename T> void List<T>::Iterator::next(){
-	if (is_end()) {
-		return;
-	} else {
+	position_counter++;
+	if (in_boundary()) {
 		current_index = l->index_arr[current_index];
+	} else {
+		current_index = l->current_size - 1;
+		return;
 	}
 }
 
@@ -67,20 +70,19 @@ template <typename T> T& List<T>::Iterator::operator*(){
 	return get_current_value();
 }
 
-template <typename T> bool List<T>::Iterator::is_begin(){
+template <typename T> bool List<T>::Iterator::in_begin(){
 	if (current_index == l->head_index)
 		return true;
 	else
 		return false;
 }
 
-template <typename T> bool List<T>::Iterator::is_end(){
-	if (l->index_arr[current_index] == -1)
+template <typename T> bool List<T>::Iterator::in_boundary(){
+	if (position_counter < l->current_size)
 		return true;
 	else
 		return false;
 }
-
 
 // Определение методов класса List
 template <typename T> List<T>::List(int init_size) {
@@ -167,13 +169,9 @@ template <typename T> T List<T>::get_value_by_number(int n){
 template <typename T> bool List<T>::has_value(const T& v){
 	List<T>::Iterator i(this);
 
-	for(i.begin(); !i.is_end(); i.next())
+	for(i.begin(); i.in_boundary(); i.next())
 		if (*i == v) {
 			return true;
 		}
-	if (*i == v) {
-		return true;
-	}
-
 }
 #endif

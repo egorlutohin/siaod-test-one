@@ -95,10 +95,6 @@ TEST(ListTestCase, HasValueTest) {
 
 }
 
-//TEST(SillyTestCase, SecondSillyTest) {
-//	EXPECT_TRUE(1);
-//}
-
 TEST(IteratorTestCase, IteratorTest){
 
 	List<int> *l = new List<int>(100);
@@ -116,16 +112,14 @@ TEST(IteratorTestCase, IteratorTest){
 	EXPECT_EQ(**i, 10);
 	do {
 		i->next();
-	} while (!i->is_end());
-	EXPECT_EQ(**i, 100);
-	EXPECT_TRUE(i->is_end());
+	} while (i->in_boundary());
+	EXPECT_EQ(i->get_current_value(), 100);
 
 	i->next();
-	EXPECT_EQ(**i, 100);
-	EXPECT_TRUE(i->is_end());
+	EXPECT_EQ(i->get_current_value(), 100);
 
 	i->begin();
-	EXPECT_TRUE(i->is_begin());
+	EXPECT_TRUE(i->in_begin());
 	EXPECT_EQ(i->get_current_value(), 10);
 	EXPECT_EQ(i->get_current_value(), **i);
 
