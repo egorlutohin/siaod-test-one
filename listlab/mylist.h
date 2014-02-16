@@ -1,5 +1,7 @@
 #ifndef MYLIST_H
 #define MYLIST_H
+#include <string>
+#include <sstream>
 
 template <typename T>
 class List {
@@ -61,6 +63,22 @@ public:
 	}
 
 	void insert_by_number(int, const T&); // + включение нового значения в позицию с заданным номером
+	void delete_element_by_value(const T&); // + удаление заданного значения из списка
+	std::string to_string() {
+		std::stringstream ss;
+
+		List<T>::Iterator i(this);
+
+		for(i.begin(); i.in_boundary(); i.next()) {
+			if (i.in_end())
+				ss << *i;
+			else
+				ss << *i << " ";
+		}
+
+		return ss.str();
+	}
+
 
 	class Iterator {
 		List<T> *l;
@@ -73,6 +91,7 @@ public:
 		T& get_current_value(); // доступ к данным текущего элемента
 		T& operator*(); // доступ к данным текукщего элемента
 		bool in_begin(); // итератор в начале
+		bool in_end();
 		bool in_boundary(); //
 		int get_current_position() {
 			return position_counter;
@@ -117,6 +136,13 @@ template <typename T> T& List<T>::Iterator::operator*(){
 
 template <typename T> bool List<T>::Iterator::in_begin(){
 	if (current_index == l->head_index)
+		return true;
+	else
+		return false;
+}
+
+template <typename T> bool List<T>::Iterator::in_end(){
+	if (l->index_arr[current_index] == -1)
 		return true;
 	else
 		return false;

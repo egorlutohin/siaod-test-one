@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "mylist.h"
+#include <string>
 
 TEST(ListTestCase, InitTest)
 { 
@@ -148,27 +149,39 @@ TEST(ListTestCase, InsertByNumberTest) {
 
 	for(int i = 20; i <= 100; i+=10)
 		l->insert(i);
+
 	// l = 10 20 30 40 50 60 70 80 90 100
+	EXPECT_EQ(l->to_string(), std::string("10 20 30 40 50 60 70 80 90 100"));
 
 	l->insert_by_number(0, 0);
 	// l = 0 10 20 30 40 50 60 70 80 90 100
-	EXPECT_EQ(l->get_value_by_number(0), 0);
-	EXPECT_EQ(l->get_value_by_number(1), 10);
-	EXPECT_EQ(l->get_value_by_number(10), 100);
+	EXPECT_EQ(l->to_string(), std::string("0 10 20 30 40 50 60 70 80 90 100"));
 
 	l->insert_by_number(3, 25);
 	// l = 0 10 20 25 30 40 50 60 70 80 90 100
-	EXPECT_EQ(l->get_value_by_number(2), 20);
-	EXPECT_EQ(l->get_value_by_number(3), 25);
-	EXPECT_EQ(l->get_value_by_number(4), 30);
-	EXPECT_EQ(l->get_value_by_number(11), 100);
+	EXPECT_EQ(l->to_string(), std::string("0 10 20 25 30 40 50 60 70 80 90 100"));
 
 	l->insert_by_number(11, 95);
 	// l = 0 10 20 25 30 40 50 60 70 80 90 95 100
-	EXPECT_EQ(l->get_value_by_number(11), 95);
-	EXPECT_EQ(l->get_value_by_number(12), 100);
+	EXPECT_EQ(l->to_string(), std::string("0 10 20 25 30 40 50 60 70 80 90 95 100"));
 
 	delete l;
+}
+
+TEST(ListTestCase, DeleteElementByValueTest) {
+
+	List<int> *l = new List<int>(100);
+
+	for(int i = 10; i <= 100; i+=10)
+		l->insert(i);
+
+	// l = 10 20 30 40 50 60 70 80 90 100
+	EXPECT_EQ(l->to_string(), std::string("10 20 30 40 50 60 70 80 90 100"));
+
+	//....
+
+	delete l;
+
 }
 
 TEST(IteratorTestCase, IteratorTest){
@@ -225,5 +238,5 @@ TEST(IteratorTestCase, EmptyIteratorTest) {
 
 int main(int argc, char **argv){
 	testing::InitGoogleTest( &argc, argv );
-        return RUN_ALL_TESTS();
+    return RUN_ALL_TESTS();
 }
