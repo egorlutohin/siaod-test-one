@@ -12,6 +12,24 @@ class List {
 	int *index_arr;
 
 	T& _get_value_by_number(int);
+	void _validate_index(int n, bool set_operation = false) {
+		if(n < 0)
+			throw "Индекс не может быть отрицательным";
+
+		if (!set_operation) { // validate get...
+			if (n >= get_size())
+				throw "Индекс больше чем размер списка";
+		} else { // validate set operation
+			if (n > get_size())
+				throw "Индекс больше чем размер списка";
+		}
+	};
+	void _have_more_one_place() {
+		if (free_index == -1) {
+			throw "В массиве больше нет места, не могу вставить еще одно значение";
+		}
+
+	};
 
 public:
 	List(int); // конструктор
@@ -58,6 +76,9 @@ public:
 		bool in_boundary(); //
 		int get_current_position() {
 			return position_counter;
+		}
+		int get_current_index() {
+			return current_index;
 		}
 	};
 	friend class Iterator;
@@ -146,9 +167,7 @@ template <typename T> bool List<T>::is_empty(){
 
 template <typename T> void List<T>::insert(const T &v){
 
-	if (free_index == -1) {
-		throw "В массиве больше нет места, не могу вставить еще одно значение";
-	}
+	_have_more_one_place();
 
 	arr[free_index] = v;
 	current_size++;
@@ -175,11 +194,8 @@ template <typename T> int List<T>::get_storage_size(){
 }
 
 template <typename T> T& List<T>::_get_value_by_number(int n){
-	if(n < 0)
-		throw "Индекс не может быть отрицательным";
 
-	if (n >= get_size())
-		throw "Индекс больше чем размер списка";
+	_validate_index(n);
 
 	int result_index = head_index;
 	List<T>::Iterator iterator(this);
@@ -205,7 +221,41 @@ template <typename T> bool List<T>::has_value(const T& v, int *p = NULL){
 }
 
 template <typename T> void List<T>::insert_by_number(int p, const T& v) {
-	return;
+
+	_have_more_one_place(); // имеет еще одно место в хранилище для добавления элемента?
+	_validate_index(p, true); // индекс нормальный?
+
+	if (is_empty()) {
+		insert(v);
+		return;
+	}
+
+	if(p == 0) { // insert to begin
+		int current_insert_index = free_index;
+		free_index = index_arr[free_index];
+
+		arr[current_insert_index] = v;
+		index_arr[current_insert_index] = head_index;
+		head_index = current_insert_index;
+
+		current_size++;
+		return;
+	} else {
+		List<int>::Iterator i(this);
+		i.begin();
+		for(int j = 0; j < p - 1; j++, i.next());
+
+		int current_insert_index = free_index;
+		free_index = index_arr[free_index];
+		arr[current_insert_index] = v;
+
+		int old_next_index = index_arr[i.get_current_index()];
+		index_arr[i.get_current_index()] = current_insert_index;
+		index_arr[current_insert_index] = old_next_index;
+		current_size++;
+
+		return;
+	}
 }
 
 #endif
