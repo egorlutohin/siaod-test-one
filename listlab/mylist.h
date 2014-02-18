@@ -131,7 +131,7 @@ template <typename T> bool List<T>::Iterator::in_begin(){
 }
 
 template <typename T> bool List<T>::Iterator::in_end(){
-	if (l->index_arr[current_index] == -1)
+	if ((l->get_size() - 1) == this->position_counter)
 		return true;
 	else
 		return false;
