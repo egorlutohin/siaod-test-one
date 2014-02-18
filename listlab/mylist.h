@@ -284,4 +284,39 @@ template <typename T> void List<T>::insert_by_number(int p, const T& v) {
 	}
 }
 
+template <typename T> void List<T>::delete_element_by_value(const T& v) {
+	if (get_size() == 0)
+		return;
+
+	List<T>::Iterator i(this);
+
+	int previous_value_index = -1;
+
+	for (i.begin(); i.in_boundary(); i.next()) {
+		if(*i == v){
+			if (i.in_begin()) {
+				head_index = index_arr[i.get_current_index()];
+				index_arr[i.get_current_index()] = free_index;
+				free_index = i.get_current_index();
+				current_size--;
+
+//			} else if (i.in_end()) {
+//				return;
+			} else {
+				index_arr[previous_value_index] = index_arr[i.get_current_index()];
+				index_arr[i.get_current_index()] = free_index;
+				free_index = i.get_current_index();
+				current_size--;
+			}
+
+			break;
+		}
+
+		previous_value_index = i.get_current_index();
+
+	}
+
+	return;
+}
+
 #endif

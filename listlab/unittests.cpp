@@ -172,16 +172,70 @@ TEST(ListTestCase, DeleteElementByValueTest) {
 
 	List<int> *l = new List<int>(100);
 
+	l->delete_element_by_value(0);
+
 	for(int i = 10; i <= 100; i+=10)
 		l->insert(i);
-
 	// l = 10 20 30 40 50 60 70 80 90 100
-	EXPECT_EQ(l->to_string(), std::string("10 20 30 40 50 60 70 80 90 100"));
+	EXPECT_EQ(std::string("10 20 30 40 50 60 70 80 90 100"), l->to_string());
 
-	//....
+	l->delete_element_by_value(10);
+	EXPECT_EQ(std::string("20 30 40 50 60 70 80 90 100"), l->to_string());
+
+	l->insert_by_number(0, 10);
+	EXPECT_EQ(std::string("10 20 30 40 50 60 70 80 90 100"), l->to_string());
+
+	l->delete_element_by_value(50);
+	EXPECT_EQ(std::string("10 20 30 40 60 70 80 90 100"), l->to_string());
+
+	l->delete_element_by_value(40);
+	EXPECT_EQ(std::string("10 20 30 60 70 80 90 100"), l->to_string());
+
+	l->delete_element_by_value(10);
+	EXPECT_EQ(std::string("20 30 60 70 80 90 100"), l->to_string());
+
+	l->delete_element_by_value(20);
+	EXPECT_EQ(std::string("30 60 70 80 90 100"), l->to_string());
+
+	l->delete_element_by_value(100);
+	EXPECT_EQ(std::string("30 60 70 80 90"), l->to_string());
+
+	l->delete_element_by_value(90);
+	EXPECT_EQ(std::string("30 60 70 80"), l->to_string());
+
+	l->delete_element_by_value(100);
+	EXPECT_EQ(std::string("30 60 70 80"), l->to_string());
+
+	for(int j = 4; j < 100; j++){
+		if (j % 2 == 0)
+			l->insert(j);
+		else
+			l->insert_by_number(j, j);
+	}
+
+	EXPECT_THROW(l->insert(1), const char *);
 
 	delete l;
 
+	l = new List<int>(100);
+	l->insert(20);
+	l->insert(10);
+	l->insert(30);
+	l->insert(10);
+	l->insert(40);
+	l->insert(10);
+
+	//l = 20 10 30 10 40 10
+	l->delete_element_by_value(10);
+	EXPECT_EQ(std::string("20 30 10 40 10"), l->to_string());
+
+	l->delete_element_by_value(10);
+	EXPECT_EQ(std::string("20 30 40 10"), l->to_string());
+
+	l->delete_element_by_value(10);
+	EXPECT_EQ(std::string("20 30 40"), l->to_string());
+
+	delete l;
 }
 
 TEST(IteratorTestCase, IteratorTest){
