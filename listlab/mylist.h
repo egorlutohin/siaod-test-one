@@ -2,6 +2,7 @@
 #define MYLIST_H
 #include <string>
 #include <sstream>
+//#include <cstddef>
 
 template <typename T>
 class List {
@@ -59,7 +60,7 @@ public:
 		if (hv)
 			return p;
 		else
-			return -1;
+			throw "Нет такого значения";
 	}
 
 	void insert_by_number(int, const T&); // + включение нового значения в позицию с заданным номером

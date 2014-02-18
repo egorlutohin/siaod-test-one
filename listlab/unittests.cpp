@@ -125,7 +125,7 @@ TEST(ListTestCase, GetValuePositionTest) {
 	EXPECT_EQ(l->get_value_position(100), 9);
 	EXPECT_EQ(l->get_value_position(50), 4);
 
-	EXPECT_EQ(l->get_value_position(1000), -1);
+	EXPECT_THROW(l->get_value_position(1000), const char *);
 
 	delete l;
 }
