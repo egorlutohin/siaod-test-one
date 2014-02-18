@@ -14,20 +14,20 @@ class List {
 	int *index_arr;
 
 	T& _get_value_by_number(int);
-	void _validate_index(int n, bool set_operation = false) {
+	void _validate_index(int n, bool inclusive = false) {
 		if(n < 0)
 			throw "Индекс не может быть отрицательным";
 
-		if (!set_operation) { // validate get...
+		if (!inclusive) { // validate get for example
 			if (n >= get_size())
 				throw "Индекс больше чем размер списка";
-		} else { // validate set operation
+		} else { // validate set operation for example
 			if (n > get_size())
 				throw "Индекс больше чем размер списка";
 		}
 	};
 	void _have_more_one_place() {
-		if (free_index == -1) {
+		if (current_size == storage_size) {
 			throw "В массиве больше нет места, не могу вставить еще одно значение";
 		}
 
@@ -48,11 +48,11 @@ public:
 		return this->get_value_by_number(i);
 	}
 	bool has_value(const T&, int*); // + опрос наличия заданного значения
-	void change_value_by_number(const int n, const T& v){
+	void change_value_by_number(const int n, const T& v){ // + изменение значения с заданным номером в списке
 		_get_value_by_number(n) = v;
 	}
 
-	int get_value_position(const T& v){
+	int get_value_position(const T& v){ // + получение позиции в списке с заданным значением
 		int p;
 		bool hv = has_value(v, &p);
 
@@ -63,21 +63,9 @@ public:
 	}
 
 	void insert_by_number(int, const T&); // + включение нового значения в позицию с заданным номером
-	void delete_element_by_value(const T&); // + удаление заданного значения из списка
-	std::string to_string() {
-		std::stringstream ss;
-
-		List<T>::Iterator i(this);
-
-		for(i.begin(); i.in_boundary(); i.next()) {
-			if (i.in_end())
-				ss << *i;
-			else
-				ss << *i << " ";
-		}
-
-		return ss.str();
-	}
+	void delete_by_value(const T&); // + удаление заданного значения из списка
+	std::string to_string();
+	void delete_by_number(int); // +  удаление значения из позиции с заданным номером
 
 
 	class Iterator {
@@ -86,13 +74,13 @@ public:
 		int position_counter;
 	public:
 		Iterator(List<T> *);
-		void begin(); // установка итератора на первый элемент списка
-		void next(); // перевод итератора на конец списка
+		void begin(); // + установка итератора на первый элемент списка
+		void next(); // + переход к следующему значению в списке
 		T& get_current_value(); // доступ к данным текущего элемента
-		T& operator*(); // доступ к данным текукщего элемента
+		T& operator*(); // + доступ к данным текущего элемента
 		bool in_begin(); // итератор в начале
 		bool in_end();
-		bool in_boundary(); //
+		bool in_boundary(); // + проверка состояния итератора
 		int get_current_position() {
 			return position_counter;
 		}
@@ -284,7 +272,23 @@ template <typename T> void List<T>::insert_by_number(int p, const T& v) {
 	}
 }
 
-template <typename T> void List<T>::delete_element_by_value(const T& v) {
+template <typename T> std::string List<T>::to_string() {
+	std::stringstream ss;
+
+	List<T>::Iterator i(this);
+
+	for(i.begin(); i.in_boundary(); i.next()) {
+		if (i.in_end())
+			ss << *i;
+		else
+			ss << *i << " ";
+	}
+
+	return ss.str();
+}
+
+
+template <typename T> void List<T>::delete_by_value(const T& v) {
 	if (get_size() == 0)
 		return;
 
@@ -312,6 +316,31 @@ template <typename T> void List<T>::delete_element_by_value(const T& v) {
 		previous_value_index = i.get_current_index();
 
 	}
+
+	return;
+}
+
+template <typename T> void List<T>::delete_by_number(int p) {
+
+	_validate_index(p);
+
+	List<T>::Iterator i(this);
+
+	i.begin();
+	if (p == 0) {
+		head_index = index_arr[i.get_current_index()];
+	} else {
+		int previous_value_index = -1;
+		for (int j = 0; j < p; j++) {
+			previous_value_index = i.get_current_index();
+			i.next();
+		}
+		index_arr[previous_value_index] = index_arr[i.get_current_index()];
+	}
+
+	index_arr[i.get_current_index()] = free_index;
+	free_index = i.get_current_index();
+	current_size--;
 
 	return;
 }
