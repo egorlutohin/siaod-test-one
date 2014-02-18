@@ -48,7 +48,7 @@ public:
 	T operator[](int i) {
 		return this->get_value_by_number(i);
 	}
-	bool has_value(const T&, int*); // + опрос наличия заданного значения
+	bool has_value(const T& v, int *p = NULL); // + опрос наличия заданного значения
 	void change_value_by_number(const int n, const T& v){ // + изменение значения с заданным номером в списке
 		_get_value_by_number(n) = v;
 	}
@@ -221,7 +221,7 @@ template <typename T> T& List<T>::_get_value_by_number(int n){
 	return *iterator;
 }
 
-template <typename T> bool List<T>::has_value(const T& v, int *p = NULL){
+template <typename T> bool List<T>::has_value(const T& v, int *p){ // by default p = NULL
 	List<T>::Iterator i(this);
 
 	for(i.begin(); i.in_boundary(); i.next())
