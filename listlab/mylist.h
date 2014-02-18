@@ -2,7 +2,7 @@
 #define MYLIST_H
 #include <string>
 #include <sstream>
-//#include <cstddef>
+#include <cstddef>
 
 template <typename T>
 class List {
@@ -184,12 +184,9 @@ template <typename T> void List<T>::insert(const T &v){
 
 	_have_more_one_place();
 
-	arr[free_index] = v;
-	current_size++;
-
 	int next_free_index = index_arr[free_index];
 
-	if (head_index == -1) {
+	if (is_empty()) {
 		head_index = 0;
 		index_arr[0] = -1;
 	} else {
@@ -200,6 +197,9 @@ template <typename T> void List<T>::insert(const T &v){
 		index_arr[last_index] = free_index; // устанавливаем конец списка
 		index_arr[free_index] = -1;
 	}
+
+	arr[free_index] = v;
+	current_size++;
 
 	free_index = next_free_index;
 }
