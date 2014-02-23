@@ -47,6 +47,8 @@ TEST(ListTestCase, InsertTest){
 		l->insert(i*10);
 	EXPECT_EQ(l->get_size(), 10);
 
+	EXPECT_EQ(std::string("10 20 30 40 50 60 70 80 90 100"), l->to_string());
+
 	EXPECT_THROW(l->insert(110), const char *);
 
 	delete l;
