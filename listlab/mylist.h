@@ -163,17 +163,14 @@ template <typename T> int List<T>::get_size() {
 }
 
 template <typename T> void List<T>::clean(){
-	head_index = -1;
 	free_index = 0;
 
 	/* Размечаем индексы свободных элементов */
 	for(int i = 0; i < storage_size - 1; i++) {
 		index_arr[i] = i + 1;
 	}
-	index_arr[storage_size - 1] = -1; // последний элемент не имеет ссылку на свободный индекс
 
 	current_size = 0;
-
 }
 
 template <typename T> bool List<T>::is_empty(){
@@ -293,7 +290,7 @@ template <typename T> void List<T>::delete_by_value(const T& v) {
 
 	List<T>::Iterator i(this);
 
-	int previous_value_index = -1;
+	int previous_value_index;
 
 	for (i.begin(); i.in_boundary(); i.next()) {
 
