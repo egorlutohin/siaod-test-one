@@ -76,7 +76,7 @@ TEST(ListTestCase, GetValueByNumberTest) {
 
 	EXPECT_EQ((*l)[4], 50);
 	int i = (*l)[4]; // i = 50
-	i = 60;
+	i = 60; i++; //for -Wall purpose
 	EXPECT_EQ((*l)[4], 50);
 
 	delete l;
@@ -310,7 +310,8 @@ TEST(IteratorTestCase, IteratorTest){
 	EXPECT_EQ(i->get_current_value(), 10);
 	EXPECT_EQ(i->get_current_value(), **i);
 
-	delete l, i;
+	delete l;
+	delete i;
 
 }
 
@@ -331,7 +332,8 @@ TEST(IteratorTestCase, EmptyIteratorTest) {
 		j++;
 	EXPECT_EQ(j, 0);
 
-	delete l, i;
+	delete l;
+	delete i;
 }
 
 int main(int argc, char **argv){

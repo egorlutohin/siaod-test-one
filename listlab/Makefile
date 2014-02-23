@@ -20,7 +20,7 @@ clean-test-menu:
 	rm -f test-menu
 
 unittests: unittests.cpp mylist.h
-	g++ -g -o unittests unittests.cpp -lgtest -lpthread
+	g++ -g -Wall -o unittests unittests.cpp -lgtest -lpthread
 
 clean-unittests:
 	rm -f unittests

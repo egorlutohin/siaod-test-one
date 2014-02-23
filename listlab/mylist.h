@@ -207,7 +207,6 @@ template <typename T> T& List<T>::_get_value_by_number(int n){
 
 	_validate_index(n);
 
-	int result_index = head_index;
 	List<T>::Iterator iterator(this);
 	for(int i = 0; i < n; i++){
 		iterator.next();
