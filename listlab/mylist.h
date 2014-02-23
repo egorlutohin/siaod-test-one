@@ -63,7 +63,7 @@ public:
 			throw "Нет такого значения";
 	}
 
-	void insert_by_number(size_t, const T&); // + включение нового значения в позицию с заданным номером
+	void insert(size_t, const T&); // + включение нового значения в позицию с заданным номером
 	void delete_by_value(const T&); // + удаление заданного значения из списка
 	std::string to_string();
 	void delete_by_number(size_t); // +  удаление значения из позиции с заданным номером
@@ -227,7 +227,7 @@ template <typename T> bool List<T>::has_value(const T& v, size_t *p){ // by defa
 	return false;
 }
 
-template <typename T> void List<T>::insert_by_number(size_t p, const T& v) {
+template <typename T> void List<T>::insert(size_t p, const T& v) {
 
 	_have_more_one_place(); // имеет еще одно место в хранилище для добавления элемента?
 	_validate_index(p, true); // индекс нормальный?

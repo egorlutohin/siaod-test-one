@@ -136,18 +136,18 @@ TEST(ListTestCase, InsertByNumberTest) {
 
 	List<int> *l = new List<int>(10);
 
-	EXPECT_THROW(l->insert_by_number(1, 1000), const char *);
+	EXPECT_THROW(l->insert(1, 1000), const char *);
 
 	for(int i = 10; i <= 100; i+=10)
 		l->insert(i);
 	// l = 10 20 30 40 50 60 70 80 90 100
 
-	EXPECT_THROW(l->insert_by_number(10, 2000), const char *);
+	EXPECT_THROW(l->insert(10, 2000), const char *);
 
 	delete l;
 
 	l = new List<int>(100);
-	l->insert_by_number(0, 10);
+	l->insert(0, 10);
 
 	for(int i = 20; i <= 100; i+=10)
 		l->insert(i);
@@ -155,15 +155,15 @@ TEST(ListTestCase, InsertByNumberTest) {
 	// l = 10 20 30 40 50 60 70 80 90 100
 	EXPECT_EQ(l->to_string(), std::string("10 20 30 40 50 60 70 80 90 100"));
 
-	l->insert_by_number(0, 0);
+	l->insert(0, 0);
 	// l = 0 10 20 30 40 50 60 70 80 90 100
 	EXPECT_EQ(l->to_string(), std::string("0 10 20 30 40 50 60 70 80 90 100"));
 
-	l->insert_by_number(3, 25);
+	l->insert(3, 25);
 	// l = 0 10 20 25 30 40 50 60 70 80 90 100
 	EXPECT_EQ(l->to_string(), std::string("0 10 20 25 30 40 50 60 70 80 90 100"));
 
-	l->insert_by_number(11, 95);
+	l->insert(11, 95);
 	// l = 0 10 20 25 30 40 50 60 70 80 90 95 100
 	EXPECT_EQ(l->to_string(), std::string("0 10 20 25 30 40 50 60 70 80 90 95 100"));
 
@@ -184,7 +184,7 @@ TEST(ListTestCase, DeleteByValueTest) {
 	l->delete_by_value(10);
 	EXPECT_EQ(std::string("20 30 40 50 60 70 80 90 100"), l->to_string());
 
-	l->insert_by_number(0, 10);
+	l->insert(0, 10);
 	EXPECT_EQ(std::string("10 20 30 40 50 60 70 80 90 100"), l->to_string());
 
 	l->delete_by_value(50);
@@ -212,7 +212,7 @@ TEST(ListTestCase, DeleteByValueTest) {
 		if (j % 2 == 0)
 			l->insert(j);
 		else
-			l->insert_by_number(j, j);
+			l->insert(j, j);
 	}
 
 	EXPECT_THROW(l->insert(1), const char *);
