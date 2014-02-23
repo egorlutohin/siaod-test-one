@@ -326,7 +326,7 @@ template <typename T> void List<T>::delete_by_number(int p) {
 	if (p == 0) {
 		head_index = index_arr[i.get_current_index()];
 	} else {
-		int previous_value_index = -1;
+		int previous_value_index;
 		for (int j = 0; j < p; j++) {
 			previous_value_index = i.get_current_index();
 			i.next();
