@@ -207,12 +207,10 @@ template <typename T> T& List<T>::_get_value_by_number(size_t n){
 
 	_validate_index(n);
 
-	List<T>::Iterator iterator(this);
-	for(size_t i = 0; i < n; i++){ // Сделать рефакторинг без переменной i
-		iterator.next();
-	}
+	List<T>::Iterator i(this);
+	for(i.begin(); i.get_current_position() < n; i.next());
 
-	return *iterator;
+	return *i;
 }
 
 template <typename T> bool List<T>::has_value(const T& v, size_t *p){ // by default p = NULL
@@ -251,8 +249,7 @@ template <typename T> void List<T>::insert_by_number(size_t p, const T& v) {
 		return;
 	} else {
 		List<T>::Iterator i(this);
-		i.begin();
-		for(size_t j = 0; j < p - 1; j++, i.next()); // можно перерделать без буквы j
+		for(i.begin(); i.get_current_position() < (p - 1); i.next());
 
 		size_t current_insert_index = free_index;
 		free_index = index_arr[free_index];
@@ -326,7 +323,7 @@ template <typename T> void List<T>::delete_by_number(size_t p) {
 		head_index = index_arr[i.get_current_index()];
 	} else {
 		size_t previous_value_index;
-		for (int j = 0; j < p; j++) { // переделать без буквы j
+		while(i.get_current_position() < p) {
 			previous_value_index = i.get_current_index();
 			i.next();
 		}
