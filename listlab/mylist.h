@@ -188,19 +188,12 @@ template <typename T> void List<T>::insert(const T &v){
 
 	if (is_empty()) {
 		head_index = 0;
-		index_arr[0] = -1;
 	} else {
-		int last_index = head_index;
-		while (index_arr[last_index] != -1) {
-			last_index = index_arr[last_index];
-		}
 
 		List<int>::Iterator i(this);
 		for(i.begin(); !i.in_end(); i.next());
 
-		//index_arr[last_index] = free_index; // устанавливаем конец списка // WTF?
 		index_arr[i.get_current_index()] = free_index;
-		index_arr[free_index] = -1;
 	}
 
 	arr[free_index] = v;
