@@ -14,6 +14,8 @@ class List {
 	T *arr;
 	size_t *index_arr;
 
+	size_t seek_num;
+
 	T& _get_value_by_number(size_t);
 	void _validate_index(size_t n, bool inclusive = false) {
 		if(n < 0)
@@ -67,6 +69,9 @@ public:
 	void delete_by_value(const T&); // + удаление заданного значения из списка
 	std::string to_string();
 	void delete_by_number(size_t); // +  удаление значения из позиции с заданным номером
+	size_t get_seek_num() {
+		return seek_num;
+	}
 
 
 	class Iterator {

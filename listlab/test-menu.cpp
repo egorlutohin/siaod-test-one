@@ -19,11 +19,19 @@ namespace o {
 		O_PRINT, O_TELL_DIMENSION, O_SIMPLE_INSERT, O_INSERT_VALUE, O_CLEAN_LIST,  
 		O_INSERT10, O_CHANGE_LIST_ELEMENT, O_GET_INDEX_BY_VALUE,
 		O_GET_VALUE_BY_INDEX, O_DEL_BY_VALUE, O_DEL_BY_INDEX, O_ITERATOR_TEST,
-		O_SET_ITERATOR_AT_BEGIN, O_SET_ITERATOR_AT_END, O_ITERATOR_NEXT, O_ITERATOR_PREV,
+		O_SET_ITERATOR_AT_BEGIN, O_ITERATOR_NEXT,
 		O_ITERATOR_GET_CURRENT, O_ITERATOR_SET_CURRENT, O_ITERATOR_INFO,
 		O_EXIT,
 		O_END
 	};
+}
+
+int get_int() {
+	int i;
+	cin >> i;
+	cin.clear();
+	cin.ignore(256, '\n');
+	return i;
 }
 
 o::option menu(){
@@ -46,9 +54,7 @@ menu_start:
 	cout << o::O_ITERATOR_TEST << ". Iterator test" << endl;
 	
 	cout << o::O_SET_ITERATOR_AT_BEGIN << ". Set iterator at begin" << endl;
-	cout << o::O_SET_ITERATOR_AT_END << ". Set iterator at end" << endl;
 	cout << o::O_ITERATOR_NEXT << ". Move iterator to next value" << endl;
-	cout << o::O_ITERATOR_PREV << ". Move iterator to previous value" << endl;
 	cout << o::O_ITERATOR_GET_CURRENT << ". Get current value of iterator" << endl;
 	cout << o::O_ITERATOR_SET_CURRENT	<< ". Set current value of iterator" << endl;
 	cout << o::O_ITERATOR_INFO << ". Tell iterator info" << endl;
@@ -56,9 +62,8 @@ menu_start:
 	cout << o::O_EXIT << ". Exit from program" << endl;
 	
 	cout << ">> ";
-	cin >> i;
-	cin.clear();
-	cin.ignore(256, '\n');
+
+	i = get_int();
 	
 	if ((i <= o::O_START) || (i >= o::O_END)){
 		goto menu_start;
@@ -70,8 +75,9 @@ menu_start:
 
 int main(int argc, char **argv){
 	
-	List<int> l;
+	List<int> l(100);
 	List<int>::Iterator it(&l);
+	it.begin();
 	o::option o;	
 	
 	while (true) {
@@ -80,68 +86,64 @@ int main(int argc, char **argv){
 
 		try {switch (o) {
 			case o::O_PRINT:
-				cout << l;
+				cout << l.to_string() << endl;
 				break;
-			
 			case o::O_TELL_DIMENSION:
 				cout << l.get_size() << endl;
 				break;
-			
 			case o::O_SIMPLE_INSERT:
 				{
 					cout << "Value: ";
-					int v;
-					cin >> v;
+					int v = get_int();
 					l.insert(v);
-					cout << l;
+					cout << l.to_string() << endl;
 				}
 				break;
-	
-			
 			case o::O_INSERT_VALUE:
 				{
 				int i, j;
 				cout << "Index: ";
-				cin >> i;
+				i = get_int();
 				cout << "Value: ";
-				cin >> j;
+				j = get_int();
 				l.insert(i, j);
-				cout << l;
+				cout << l.to_string() << endl;
 				}
 				break;
 			
 			case o::O_CLEAN_LIST:
 				l.clean();
-				cout << l << endl;
+				cout << l.to_string() << endl;
 				break;
 			
 			case o::O_INSERT10:
 				{
 					for (int i=10; i <= 100; i+=10)
 						l.insert(i);
-					cout << l;
+					cout << l.to_string() << endl;
 				}
 				break;
 			
 			case o::O_CHANGE_LIST_ELEMENT:
 				{
+				cout << l.to_string() << endl;
 				int i, j;
 				cout << "Index: ";
-				cin >> i;
+				i = get_int();
 				cout << "Value: ";
-				cin >> j;
-				l[i] = j;
-				cout << l;
+				j = get_int();
+				l.change_value_by_number(i, j);
+				cout << l.to_string() << endl;
 				}
 				break;
 			
 			case o::O_GET_INDEX_BY_VALUE:
 				{
+				cout << l.to_string() << endl;
 				cout << "Value: ";
 				int v, i;
-				cin >> v;
-				i = l.get_num_by_value(v);
-				cout << l;
+				v = get_int();
+				i = l.get_value_position(v);
 				cout << "Index: " << i << endl;
 				cout << "Number of seeks: " << l.get_seek_num() << endl;
 				}
@@ -149,106 +151,85 @@ int main(int argc, char **argv){
 				
 			case o::O_DEL_BY_VALUE:
 				{
-					cout << l;
+					cout << l.to_string() << endl;
 					cout << "Value: ";
-					int v;
-					cin >> v;
-					cin.clear();
-					cin.ignore(256, '\n');
-					l.del_by_val(v);
-					cout << l;
+					int v = get_int();
+					l.delete_by_value(v);
+					cout << l.to_string() << endl;
 					cout << "Number of seeks: " << l.get_seek_num() << endl;
 				}
 				break;
 				
 			case o::O_DEL_BY_INDEX:
 				{
-					cout << l;
+					cout << l.to_string() << endl;
 					cout << "Index: ";
-					int i;
-					cin >> i;
-					l.del_by_num(i);
-					cout << l;
+					int i = get_int();
+					l.delete_by_number(i);
+					cout << l.to_string() << endl;
 					cout << "Number of seeks: " << l.get_seek_num() << endl;
 				}
 				break;
 			case o::O_GET_VALUE_BY_INDEX:
 				{
-				int i;
+				cout << l.to_string() << endl;
 				cout << "Index: ";
-				cin >> i;
-				cout << l;
+				int i = get_int();
 				cout << "Value: " << l[i] << endl;
 				}
 				break;
 			case o::O_ITERATOR_TEST:
-				cout << l << endl;
-				cout << "First three values: " << it.begin();
-				it++;
+				cout << l.to_string() << endl;
+				it.begin();
+				cout << "First three values: " << *it;
+				it.next();
 				cout << " " << *it;
-				it++;
+				it.next();
 				cout << " " << *it << endl;
-				cout << "Last three values: " << it.end();
-				it--;
-				cout << " " << *it;
-				it--;
-				cout << " " << *it << endl;
-				cout << endl;
-				cout << "On boundary (bool)?: " << it.in_boundary() << endl;
-				cout << "Last value: " << it.end() << endl;
-				it++;
-				cout << "Next three values: " << *it << " ";
-				it++;
-				cout << *it << " ";
-				it++;
-				cout << *it << endl;
-				cout << "On boundary (bool)?: " << it.in_boundary() << endl;
+				cout << "In boundary (bool): " << it.in_boundary() << endl;
 				break;
 			case o::O_SET_ITERATOR_AT_BEGIN:
 				it.begin();
-				cout << "Current index: " << it.tell_index() << endl;
-				break;
-			case o::O_SET_ITERATOR_AT_END:
-				it.end();
-				cout << "Current index: " << it.tell_index() << endl;
+				cout << l.to_string() << endl;
+				cout << "Current index: " << it.get_current_position() << endl;
 				break;
 			case o::O_ITERATOR_NEXT:
-				it++;
-				cout << "Current index: " << it.tell_index() << endl;
-				break;
-			case o::O_ITERATOR_PREV:
-				it--;
-				cout << "Current index: " << it.tell_index() << endl;
+				cout << l.to_string() << endl;
+				it.next();
+				cout << "Current index: " << it.get_current_position() << endl;
 				break;
 			case o::O_ITERATOR_GET_CURRENT:
-				cout << "Index: " << it.tell_index() << endl;
+				cout << l.to_string() << endl;
+				cout << "Index: " << it.get_current_position() << endl;
 				cout << "Value: " << *it << endl;
 				break;
 			case o::O_ITERATOR_SET_CURRENT:
-				cout << "Index: " << it.tell_index() << endl;
+				cout << l.to_string() << endl;
+				cout << "Index: " << it.get_current_position() << endl;
 				{
-					int v;
 					cout << "Value: ";
-					cin >> v;
+					int v = get_int();
 					*it = v;
 				}
+				cout << l.to_string() << endl;
 				break;
-				
 			case o::O_ITERATOR_INFO:
-				cout << "Current index: " << it.tell_index() << endl;
-				cout << "Current counter: " << it.tell_counter() << endl;
+				cout << l.to_string() << endl;
+				cout << "Current index: " << it.get_current_position() << endl;
 				cout << "In boundary: " << it.in_boundary() << endl;
+				cout << "In begin (bool): " << it.in_begin() << endl;
+				cout << "In end (bool): " << it.in_end() << endl;
 				break;
-			
 			case o::O_EXIT:
 				cout << "Good bye!" << endl;
 				exit(0);
+				break;
+			default:
 				break;
 			
 		}} catch (const char *m) {
 			cerr << "Error: " << m << endl;;
 		}
-		//getchar();
 		cout << "Press enter to continue ... ";
 		getchar();
 	}
