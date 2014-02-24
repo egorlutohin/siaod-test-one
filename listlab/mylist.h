@@ -69,10 +69,7 @@ public:
 	void delete_by_value(const T&); // + удаление заданного значения из списка
 	std::string to_string();
 	void delete_by_number(size_t); // +  удаление значения из позиции с заданным номером
-	size_t get_seek_num() {
-		return seek_num;
-	}
-
+	size_t get_seek_num() { return seek_num; }
 
 	class Iterator {
 		List<T> *l;
@@ -98,8 +95,7 @@ public:
 };
 
 // Определение методов класса Iterator
-template <typename T> List<T>::Iterator::Iterator(List<T> *ptr):
-	l(ptr){
+template <typename T> List<T>::Iterator::Iterator(List<T> *ptr) : l(ptr){
 	this->begin();
 }
 
@@ -169,13 +165,16 @@ template <typename T> size_t List<T>::get_size() {
 
 template <typename T> void List<T>::clean(){
 	free_index = 0;
+	seek_num = 0;
 
 	/* Размечаем индексы свободных элементов */
 	for(size_t i = 0; i < storage_size - 1; i++) {
 		index_arr[i] = i + 1;
+		seek_num++;
 	}
 
 	current_size = 0;
+	head_index = 0;
 }
 
 template <typename T> bool List<T>::is_empty(){
@@ -185,6 +184,7 @@ template <typename T> bool List<T>::is_empty(){
 template <typename T> void List<T>::insert(const T &v){
 
 	_have_more_one_place();
+	seek_num = 0;
 
 	size_t next_free_index = index_arr[free_index];
 
@@ -193,7 +193,7 @@ template <typename T> void List<T>::insert(const T &v){
 	} else {
 
 		List<T>::Iterator i(this);
-		for(i.begin(); !i.in_end(); i.next());
+		for(i.begin(); !i.in_end(); i.next(), seek_num++);
 
 		index_arr[i.get_current_index()] = free_index;
 	}
@@ -211,9 +211,10 @@ template <typename T> size_t List<T>::get_storage_size(){
 template <typename T> T& List<T>::_get_value_by_number(size_t n){
 
 	_validate_index(n);
+	seek_num = 0;
 
 	List<T>::Iterator i(this);
-	for(i.begin(); i.get_current_position() < n; i.next());
+	for(i.begin(); i.get_current_position() < n; i.next(), seek_num++);
 
 	return *i;
 }
@@ -221,7 +222,9 @@ template <typename T> T& List<T>::_get_value_by_number(size_t n){
 template <typename T> bool List<T>::has_value(const T& v, size_t *p){ // by default p = NULL
 	List<T>::Iterator i(this);
 
-	for(i.begin(); i.in_boundary(); i.next())
+	seek_num = 0;
+
+	for(i.begin(); i.in_boundary(); i.next(), seek_num++)
 		if (*i == v) {
 			if(p != NULL) {
 				*p = i.get_current_position();
@@ -237,15 +240,11 @@ template <typename T> void List<T>::insert(size_t p, const T& v) {
 	_have_more_one_place(); // имеет еще одно место в хранилище для добавления элемента?
 	_validate_index(p, true); // индекс нормальный?
 
-	if (is_empty()) {
-		insert(v);
-		return;
-	}
+	seek_num = 0;
 
 	if(p == 0) { // insert to begin
 		size_t current_insert_index = free_index;
 		free_index = index_arr[free_index];
-
 		arr[current_insert_index] = v;
 		index_arr[current_insert_index] = head_index;
 		head_index = current_insert_index;
@@ -254,7 +253,7 @@ template <typename T> void List<T>::insert(size_t p, const T& v) {
 		return;
 	} else {
 		List<T>::Iterator i(this);
-		for(i.begin(); i.get_current_position() < (p - 1); i.next());
+		for(i.begin(); i.get_current_position() < (p - 1); i.next(), seek_num++);
 
 		size_t current_insert_index = free_index;
 		free_index = index_arr[free_index];
@@ -272,9 +271,11 @@ template <typename T> void List<T>::insert(size_t p, const T& v) {
 template <typename T> std::string List<T>::to_string() {
 	std::stringstream ss;
 
+	seek_num = 0;
+
 	List<T>::Iterator i(this);
 
-	for(i.begin(); i.in_boundary(); i.next()) {
+	for(i.begin(); i.in_boundary(); i.next(), seek_num++) {
 		if (i.in_end())
 			ss << *i;
 		else
@@ -293,7 +294,9 @@ template <typename T> void List<T>::delete_by_value(const T& v) {
 
 	size_t previous_value_index;
 
-	for (i.begin(); i.in_boundary(); i.next()) {
+	seek_num = 0;
+
+	for (i.begin(); i.in_boundary(); i.next(), seek_num++) {
 
 		if(*i == v){
 
@@ -324,13 +327,16 @@ template <typename T> void List<T>::delete_by_number(size_t p) {
 	List<T>::Iterator i(this);
 
 	i.begin();
+
+	seek_num = 0;
+
 	if (p == 0) {
 		head_index = index_arr[i.get_current_index()];
 	} else {
 		size_t previous_value_index;
 		while(i.get_current_position() < p) {
 			previous_value_index = i.get_current_index();
-			i.next();
+			i.next(); seek_num++;
 		}
 		index_arr[previous_value_index] = index_arr[i.get_current_index()];
 	}
