@@ -18,9 +18,6 @@ class List {
 
 	T& _get_value_by_number(size_t);
 	void _validate_index(size_t n, bool inclusive = false) {
-		if(n < 0)
-			throw "Индекс не может быть отрицательным";
-
 		if (!inclusive) { // validate get for example
 			if (n >= get_size())
 				throw "Индекс больше чем размер списка";
