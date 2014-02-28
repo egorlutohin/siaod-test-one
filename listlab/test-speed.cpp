@@ -6,7 +6,7 @@ using namespace std;
 #define TAB "\t"
 
 List<int>* make_list(int amount) {
-	List<int> *l = new List<int>();
+	List<int> *l = new List<int>(amount+1);
 	for(int i = 0; i < amount; i++){
 		l->insert(rand());
 	}
@@ -34,7 +34,7 @@ int main(int argc, char **argv){
 			l->insert(rand() % i, 0);
 			num_insert+= l->get_seek_num();
 			
-			l->del_by_num(rand() % i);
+			l->delete_by_number(rand() % i);
 			num_delete+= l->get_seek_num();
 		}
 		
