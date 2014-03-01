@@ -105,9 +105,6 @@ template <typename T> void List<T>::Iterator::next(){
 	position_counter++;
 	if (in_boundary()) {
 		current_index = l->index_arr[current_index];
-	} else {
-		current_index = l->current_size - 1;
-		return;
 	}
 }
 
