@@ -1,6 +1,8 @@
 sortlab/menu-test
 sortlab/simple-speed-test
 sortlab/advanced-speed-test
+
 listlab/unittests
 listlab/test-menu
 listlab/test-speed
+listlab/.*
