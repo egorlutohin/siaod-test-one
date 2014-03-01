@@ -5,4 +5,5 @@ sortlab/advanced-speed-test
 listlab/unittests
 listlab/test-menu
 listlab/test-speed
+listlab/*.pdf
 listlab/.*

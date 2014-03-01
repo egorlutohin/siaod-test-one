@@ -11,6 +11,9 @@ test-menu: test-menu.cpp mylist.h
 unittests: unittests.cpp mylist.h
 	g++ -g -Wall -o unittests unittests.cpp -lgtest -lpthread
 
+make-pdf:
+	libreoffice --headless --convert-to pdf report-listlab.odt 
+
 clean-test-menu:
 	rm -f test-menu
 
@@ -20,6 +23,9 @@ clean-test-speed:
 clean-unittests:
 	rm -f unittests
 
-clean: clean-unittests clean-test-menu clean-test-speed
+clean-pdf:
+	rm -rf *.pdf
 
-.PHONY: all help clean clean-test-menu clean-test-speed clean-unittests 
+clean: clean-unittests clean-test-menu clean-test-speed clean-pdf
+
+.PHONY: all help clean clean-test-menu clean-test-speed clean-unittests make-pdf clean-pdf
