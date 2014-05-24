@@ -21,6 +21,18 @@ class MyBST {
 	};
 
 	MyBSTNode *head;
+	size_t size;
+	void clean(MyBSTNode *n) {
+		if (n == NULL) {
+			return;
+		}
+
+		clean(n->l);
+		clean(n->r);
+
+		delete n;
+		this->size--;
+	}
 	void to_string_rambler(MyBSTNode *n, std::stringstream &ss) {
 
 		if (n == NULL) {
@@ -41,6 +53,15 @@ class MyBST {
 public:
 	MyBST();
 	bool insert(Key, Value);
+	void clean();
+
+	size_t get_size() {
+		return size;
+	}
+
+	bool is_empty() {
+		return (this->get_size() == 0);
+	}
 
 	std::string to_string() {
 		std::stringstream ss;
@@ -72,6 +93,7 @@ public:
 template <typename Key, typename Value>
 MyBST<Key, Value>::MyBST() {
 	this->head = NULL;
+	this->size = 0;
 }
 
 template <typename Key, typename Value>
@@ -81,6 +103,11 @@ bool MyBST<Key, Value>::insert(Key k, Value v) {
 	if(this->head == NULL) {
 		this->head = node;
 	}
+
+	if (flag == true) {
+		this->size++;
+	}
+
 	return flag;
 }
 
@@ -109,4 +136,9 @@ typename MyBST<Key, Value>::MyBSTNode *MyBST<Key, Value>::insert(Key k, Value v,
 	return root;
 }
 
+template <typename Key, typename Value>
+void MyBST<Key, Value>::clean() {
+	this->clean(this->head);
+	this->head = NULL;
+}
 #endif
