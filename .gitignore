@@ -7,3 +7,7 @@ listlab/test-menu
 listlab/test-speed
 listlab/*.pdf
 listlab/.*
+
+bstlab/.*
+bstlab/*.pdf
+bstlab/unittests
