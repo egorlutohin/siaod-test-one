@@ -32,3 +32,7 @@ TEST(MyBSTTestCase, InsertTest)
 	delete bst;
 }
 
+TEST(MyBSTTestCaset, TreeSizeTest) {
+
+}
+

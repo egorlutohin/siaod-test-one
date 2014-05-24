@@ -1,30 +1,27 @@
 #ifndef mybsth
 #define mybsth
 
-template <typename Key, typename Value>
-class MyBSTNode {
-public:
-	Value v;
-	Key k;
-	MyBSTNode<Key, Value> *l, *r;
-
-//	MyBSTNode() {
-//		l = NULL;
-//		r = NULL;
-//	}
-
-	MyBSTNode(Key &k, Value &v){
-		this->k = k;
-		this->v = v;
-		this->l = NULL;
-		this->r = NULL;
-	}
-};
+//template <typename Key, typename Value>
 
 template <typename Key, typename Value>
 class MyBST {
-	MyBSTNode<Key, Value> *head;
-	void to_string_rambler(MyBSTNode<Key, Value> *n, std::stringstream &ss) {
+
+	class MyBSTNode {
+	public:
+		Value v;
+		Key k;
+		MyBSTNode *l, *r;
+
+		MyBSTNode(Key &k, Value &v){
+			this->k = k;
+			this->v = v;
+			this->l = NULL;
+			this->r = NULL;
+		}
+	};
+
+	MyBSTNode *head;
+	void to_string_rambler(MyBSTNode *n, std::stringstream &ss) {
 
 		if (n == NULL) {
 			return;
@@ -39,10 +36,11 @@ class MyBST {
 		ss << n->v;
 	}
 
+	MyBSTNode *insert(Key, Value, MyBSTNode *, bool&);
+
 public:
 	MyBST();
-	MyBSTNode<Key, Value> *insert(Key, Value);
-	MyBSTNode<Key, Value> *insert(Key, Value, MyBSTNode<Key, Value> *, bool&);
+	bool insert(Key, Value);
 
 	std::string to_string() {
 		std::stringstream ss;
@@ -54,7 +52,7 @@ public:
 
 	class Iterator {
 		MyBST<Key, Value> *bst;
-		MyBSTNode<Key, Value> *current_node;
+		MyBSTNode *current_node;
 
 	public:
 		//next();
@@ -70,27 +68,28 @@ public:
 	friend Iterator;
 };
 
+
 template <typename Key, typename Value>
 MyBST<Key, Value>::MyBST() {
 	this->head = NULL;
 }
 
 template <typename Key, typename Value>
-MyBSTNode<Key, Value> *MyBST<Key, Value>::insert(Key k, Value v) {
-	bool flag;
-	MyBSTNode<int, int> *node = this->insert(k, v, this->head, flag);
+bool MyBST<Key, Value>::insert(Key k, Value v) {
+	bool flag = false;
+	MyBSTNode *node = this->insert(k, v, this->head, flag);
 	if(this->head == NULL) {
 		this->head = node;
 	}
-	return node;
+	return flag;
 }
 
 template <typename Key, typename Value>
-MyBSTNode<Key, Value> *MyBST<Key, Value>::insert(Key k, Value v, MyBSTNode<Key, Value> *root, bool &iflag) {
+typename MyBST<Key, Value>::MyBSTNode *MyBST<Key, Value>::insert(Key k, Value v, MyBST<Key, Value>::MyBSTNode *root, bool &iflag) {
 
 	if (root == NULL) {
 		iflag = true;
-		MyBSTNode<Key, Value> *node = new MyBSTNode<Key, Value>(k, v);
+		MyBSTNode *node = new MyBSTNode(k, v);
 		return node;
 	}
 
