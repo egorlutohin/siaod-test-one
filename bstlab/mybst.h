@@ -1,8 +1,6 @@
 #ifndef mybsth
 #define mybsth
 
-//template <typename Key, typename Value>
-
 template <typename Key, typename Value>
 class MyBST {
 
@@ -22,8 +20,10 @@ class MyBST {
 
 	MyBSTNode *head;
 	size_t size;
+	size_t operation_counter;
 
 	Value &get_value(MyBSTNode *t, const Key &k) {
+		this->operation_counter++;
 		if (t == NULL) {
 			throw "Нет элемента с таким ключом в дереве";
 		}
@@ -80,6 +80,7 @@ class MyBST {
 	}
 
 	MyBSTNode *remove2(MyBSTNode *t, MyBSTNode *t0) {
+		this->operation_counter++;
 		if(t->l != NULL) {
 			t->l = this->remove2(t->l, t0);
 			return t;
@@ -96,6 +97,7 @@ class MyBST {
 	}
 
 	MyBSTNode *remove(MyBSTNode *t, Key k, bool &deleted) {
+		this->operation_counter++;
 		if (t == NULL) {
 			deleted = false;
 			return t;
@@ -175,9 +177,14 @@ public:
 	void clean();
 	bool remove(Key k) {
 		bool deleted;
+		this->operation_counter = 0;
 		this->remove(this->head, k, deleted);
 		return deleted;
 	};
+
+	size_t get_operation_counter() {
+		return this->operation_counter;
+	}
 
 	size_t get_inner_path_value() {
 		size_t sum = 0;
@@ -186,6 +193,7 @@ public:
 	}
 
 	Value &get_value(const Key &k) {
+		this->operation_counter = 0;
 		return get_value(this->head, k);
 	}
 
@@ -242,11 +250,13 @@ template <typename Key, typename Value>
 MyBST<Key, Value>::MyBST() {
 	this->head = NULL;
 	this->size = 0;
+	this->operation_counter = 0;
 }
 
 template <typename Key, typename Value>
 bool MyBST<Key, Value>::insert(Key k, Value v) {
 	bool flag = false;
+	this->operation_counter = 0;
 	MyBSTNode *node = this->insert(k, v, this->head, flag);
 	if(this->head == NULL) {
 		this->head = node;
@@ -261,6 +271,8 @@ bool MyBST<Key, Value>::insert(Key k, Value v) {
 
 template <typename Key, typename Value>
 typename MyBST<Key, Value>::MyBSTNode *MyBST<Key, Value>::insert(Key k, Value v, MyBST<Key, Value>::MyBSTNode *root, bool &iflag) {
+
+	this->operation_counter++;
 
 	if (root == NULL) {
 		iflag = true;

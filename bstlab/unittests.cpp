@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-TEST(MyBSTTestCase, InitTest)
+TEST(MyBSTTest, Init)
 {
 	MyBST<int, int> *bst = new MyBST<int, int>();
 
@@ -13,7 +13,7 @@ TEST(MyBSTTestCase, InitTest)
 	delete bst;
 }
 
-TEST(MyBSTTestCase, GetHeadValueTest) {
+TEST(MyBSTTest, GetHeadValue) {
 	MyBST<int, int> *bst = new MyBST<int, int>();
 
 	EXPECT_THROW(bst->get_head_value(), const char *);
@@ -34,7 +34,7 @@ TEST(MyBSTTestCase, GetHeadValueTest) {
 	delete bst;
 }
 
-TEST(MyBSTTestCase, GetInnerPathValue) {
+TEST(MyBSTTest, GetInnerPathValue) {
 	MyBST<int, int> *bst = new MyBST<int, int>();
 
 	bst->insert(20, 20);
@@ -50,7 +50,7 @@ TEST(MyBSTTestCase, GetInnerPathValue) {
 	delete bst;
 }
 
-TEST(MyBSTTestCase, GetValueTest) {
+TEST(MyBSTTest, GetValue) {
 	MyBST<int, int> *bst = new MyBST<int, int>();
 
 	bst->insert(20, 20);
@@ -68,7 +68,7 @@ TEST(MyBSTTestCase, GetValueTest) {
 	delete bst;
 }
 
-TEST(MyBSTTestCase, InsertTest)
+TEST(MyBSTTest, Insert)
 {
 	MyBST<int, int> *bst = new MyBST<int, int>();
 
@@ -86,7 +86,7 @@ TEST(MyBSTTestCase, InsertTest)
 	delete bst;
 }
 
-TEST(MyBSTTestCase, DeleteTest) {
+TEST(MyBSTTest, Delete) {
 
 	MyBST<int, int> *bst = new MyBST<int, int>();
 
@@ -113,7 +113,7 @@ TEST(MyBSTTestCase, DeleteTest) {
 	delete bst;
 }
 
-TEST(MyBSTTestCase, TreeSizeTest) {
+TEST(MyBSTTest, TreeSize) {
 
 	MyBST<int, int> *bst = new MyBST<int, int>();
 
@@ -146,7 +146,7 @@ TEST(MyBSTTestCase, TreeSizeTest) {
 	delete bst;
 }
 
-TEST(MyBSTTestCase, CleanTest) {
+TEST(MyBSTTest, Clean) {
 
 	MyBST<int, int> *bst = new MyBST<int, int>();
 
@@ -169,7 +169,7 @@ TEST(MyBSTTestCase, CleanTest) {
 	delete bst;
 }
 
-TEST(MyBSTTestCase, PrintTest) {
+TEST(MyBSTTest, DISABLED_Print) {
 	MyBST<int, int> *bst = new MyBST<int, int>();
 
 	bst->insert(20, 20);
@@ -181,6 +181,51 @@ TEST(MyBSTTestCase, PrintTest) {
 	bst->insert(35, 35);
 
 	bst->print();
+
+	delete bst;
+}
+
+TEST(MyBSTTest, GetOperationCounter) {
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	bst->insert(20, 20);
+	EXPECT_EQ(1, bst->get_operation_counter());
+	bst->insert(10, 10);
+	EXPECT_EQ(2, bst->get_operation_counter());
+	bst->insert(40, 40);
+	EXPECT_EQ(2, bst->get_operation_counter());
+	bst->insert(30, 30);
+	EXPECT_EQ(3, bst->get_operation_counter());
+	bst->insert(50, 50);
+	EXPECT_EQ(3, bst->get_operation_counter());
+	bst->insert(25, 25);
+	EXPECT_EQ(4, bst->get_operation_counter());
+	bst->insert(35, 35);
+	EXPECT_EQ(4, bst->get_operation_counter());
+
+	bst->remove(35);
+	EXPECT_EQ(4, bst->get_operation_counter());
+	bst->remove(40);
+	EXPECT_EQ(3, bst->get_operation_counter());
+
+	delete bst;
+
+
+	bst = new MyBST<int, int>();
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(40, 40);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+	bst->insert(25, 25);
+	bst->insert(35, 35);
+
+	bst->get_value(30);
+	EXPECT_EQ(3, bst->get_operation_counter());
+	bst->get_value(25);
+	EXPECT_EQ(4, bst->get_operation_counter());
+	bst->get_value(40);
+	EXPECT_EQ(2, bst->get_operation_counter());
 
 	delete bst;
 }
