@@ -32,6 +32,22 @@ TEST(MyBSTTestCase, GetHeadValueTest) {
 	EXPECT_EQ(30, bst->get_head_value());
 }
 
+TEST(MyBSTTestCase, GetValueTest) {
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+
+	EXPECT_EQ(20, bst->get_value(20));
+	EXPECT_EQ(50, bst->get_value(50));
+	EXPECT_EQ(30, bst->get_value(30));
+
+	EXPECT_THROW(bst->get_value(0), const char *);
+	EXPECT_THROW(bst->get_value(10000), const char *);
+}
+
 TEST(MyBSTTestCase, InsertTest)
 {
 	MyBST<int, int> *bst = new MyBST<int, int>();

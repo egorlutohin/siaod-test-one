@@ -22,6 +22,24 @@ class MyBST {
 
 	MyBSTNode *head;
 	size_t size;
+
+	Value &get_value(MyBSTNode *t, const Key &k) {
+		if (t == NULL) {
+			throw "Нет элемента с таким ключом в дереве";
+		}
+
+		if (k == t->k) {
+			return t->v;
+		}
+
+		if (k < t->k) {
+			return get_value(t->l, k);
+		} else {
+			return get_value(t->r, k);
+		}
+
+	}
+
 	void clean(MyBSTNode *n) {
 		if (n == NULL) {
 			return;
@@ -132,6 +150,10 @@ public:
 		this->remove(this->head, k, deleted);
 		return deleted;
 	};
+
+	Value &get_value(const Key &k) {
+		return get_value(this->head, k);
+	}
 
 	Value &get_head_value() {
 		if (this->head == NULL) {
