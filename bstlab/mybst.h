@@ -40,6 +40,19 @@ class MyBST {
 
 	}
 
+	void get_inner_path_value(MyBSTNode *n, size_t level, size_t &sum) {
+		if(n == NULL) {
+			return;
+		}
+
+		get_inner_path_value(n->l, level + 1, sum);
+		get_inner_path_value(n->r, level + 1, sum);
+
+		if ((n->l != NULL) && (n->r != NULL)) {
+			sum+= level;
+		}
+	}
+
 	void clean(MyBSTNode *n) {
 		if (n == NULL) {
 			return;
@@ -136,6 +149,21 @@ class MyBST {
 		return t;
 	}
 
+	void print(MyBSTNode *n, size_t level) {
+		if (n == NULL) {
+			return;
+		}
+
+		print(n->r, level + 1);
+
+		for(int i=0; i <= 3*level; i++) {
+			std::cout << " ";
+		}
+		std::cout << n->k << std::endl;
+
+		print(n->l, level + 1);
+	}
+
 	MyBSTNode *insert(Key, Value, MyBSTNode *, bool&);
 
 public:
@@ -150,6 +178,12 @@ public:
 		this->remove(this->head, k, deleted);
 		return deleted;
 	};
+
+	size_t get_inner_path_value() {
+		size_t sum = 0;
+		this->get_inner_path_value(this->head, 0, sum);
+		return sum;
+	}
 
 	Value &get_value(const Key &k) {
 		return get_value(this->head, k);
@@ -169,6 +203,12 @@ public:
 
 	bool is_empty() {
 		return (this->get_size() == 0);
+	}
+
+	void print() {
+		std::cout << std::endl;
+		this->print(this->head, 0);
+		std::cout << std::endl;
 	}
 
 	std::string to_string() {

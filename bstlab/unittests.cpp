@@ -30,6 +30,24 @@ TEST(MyBSTTestCase, GetHeadValueTest) {
 
 	bst->remove(40);
 	EXPECT_EQ(30, bst->get_head_value());
+
+	delete bst;
+}
+
+TEST(MyBSTTestCase, GetInnerPathValue) {
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(40, 40);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+	bst->insert(25, 25);
+	bst->insert(35, 35);
+
+	EXPECT_EQ(3, bst->get_inner_path_value());
+
+	delete bst;
 }
 
 TEST(MyBSTTestCase, GetValueTest) {
@@ -46,6 +64,8 @@ TEST(MyBSTTestCase, GetValueTest) {
 
 	EXPECT_THROW(bst->get_value(0), const char *);
 	EXPECT_THROW(bst->get_value(10000), const char *);
+
+	delete bst;
 }
 
 TEST(MyBSTTestCase, InsertTest)
@@ -123,6 +143,7 @@ TEST(MyBSTTestCase, TreeSizeTest) {
 	bst->insert(10, 10);
 	EXPECT_EQ(1, bst->get_size());
 
+	delete bst;
 }
 
 TEST(MyBSTTestCase, CleanTest) {
@@ -144,6 +165,23 @@ TEST(MyBSTTestCase, CleanTest) {
 	bst->insert(30, 30);
 	bst->insert(50, 50);
 	EXPECT_EQ(std::string("10 50 30 20"), bst->to_string());
+
+	delete bst;
 }
 
+TEST(MyBSTTestCase, PrintTest) {
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(40, 40);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+	bst->insert(25, 25);
+	bst->insert(35, 35);
+
+	bst->print();
+
+	delete bst;
+}
 
