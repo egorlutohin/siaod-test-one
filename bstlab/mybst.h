@@ -48,12 +48,89 @@ class MyBST {
 		ss << n->v;
 	}
 
+	MyBSTNode *remove2(MyBSTNode *t, MyBSTNode *t0) {
+		if(t->l != NULL) {
+			t->l = this->remove2(t->l, t0);
+			return t;
+		}
+
+		t0->k = t->k;
+		t0->v = t->v;
+
+		MyBSTNode *x = t->r;
+		delete t;
+		this->size--;
+
+		return x;
+	}
+
+	MyBSTNode *remove(MyBSTNode *t, Key k, bool &deleted) {
+		if (t == NULL) {
+			deleted = false;
+			return t;
+		}
+
+		if (k < t->k) {
+			bool del;
+			t->l = this->remove(t->l, k, del);
+			deleted = del;
+			return t;
+		}
+
+		if (k > t->k) {
+			bool del;
+			t->r = this->remove(t->r, k, del);
+			deleted = del;
+			return t;
+		}
+
+		deleted = true;
+		if ((t->l == NULL) && (t->r == NULL)) {
+			delete t;
+			this->size--;
+			return NULL;
+		}
+
+		if(t->l == NULL) {
+			MyBSTNode *x = t->r;
+			delete t;
+			this->size--;
+			return x;
+		}
+
+		if(t->r == NULL) {
+			MyBSTNode *x = t->l;
+			delete t;
+			this->size--;
+			return x;
+		}
+
+		t->r = this->remove2(t->r, t);
+		return t;
+	}
+
 	MyBSTNode *insert(Key, Value, MyBSTNode *, bool&);
 
 public:
 	MyBST();
+	~MyBST() {
+		this->clean();
+	};
 	bool insert(Key, Value);
 	void clean();
+	bool remove(Key k) {
+		bool deleted;
+		this->remove(this->head, k, deleted);
+		return deleted;
+	};
+
+	Value &get_head_value() {
+		if (this->head == NULL) {
+			throw "Дерево пусто";
+		}
+
+		return this->head->v;
+	}
 
 	size_t get_size() {
 		return size;
