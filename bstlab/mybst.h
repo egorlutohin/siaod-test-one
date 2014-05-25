@@ -86,6 +86,9 @@ class MyBST {
 
 		deleted = true;
 		if ((t->l == NULL) && (t->r == NULL)) {
+			if(t == this->head) {
+				this->head = NULL;
+			}
 			delete t;
 			this->size--;
 			return NULL;
@@ -93,6 +96,9 @@ class MyBST {
 
 		if(t->l == NULL) {
 			MyBSTNode *x = t->r;
+			if (t == this->head) {
+				this->head = t->r;
+			}
 			delete t;
 			this->size--;
 			return x;
@@ -100,6 +106,9 @@ class MyBST {
 
 		if(t->r == NULL) {
 			MyBSTNode *x = t->l;
+			if (t == this->head) {
+				this->head = t->l;
+			}
 			delete t;
 			this->size--;
 			return x;

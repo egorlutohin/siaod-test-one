@@ -13,6 +13,25 @@ TEST(MyBSTTestCase, InitTest)
 	delete bst;
 }
 
+TEST(MyBSTTestCase, GetHeadValueTest) {
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	EXPECT_THROW(bst->get_head_value(), const char *);
+
+	bst->insert(20, 20);
+	EXPECT_EQ(20, bst->get_head_value());
+
+	bst->insert(10, 10);
+	bst->insert(30, 30);
+	bst->insert(40, 40);
+	bst->insert(50, 50);
+	bst->remove(20);
+	EXPECT_EQ(30, bst->get_head_value());
+
+	bst->remove(40);
+	EXPECT_EQ(30, bst->get_head_value());
+}
+
 TEST(MyBSTTestCase, InsertTest)
 {
 	MyBST<int, int> *bst = new MyBST<int, int>();
@@ -48,10 +67,12 @@ TEST(MyBSTTestCase, DeleteTest) {
 	EXPECT_EQ(20, bst->get_head_value());
 
 	bst->insert(30, 30);
-	EXPECT_EQ(std::string("10 30 40 50 20"), bst->to_string()); // hbz
+	EXPECT_EQ(std::string("10 30 40 50 20"), bst->to_string());
 	EXPECT_EQ(20, bst->get_head_value());
 
-	bst->remove(20); //head delete test !!! ???
+	bst->remove(20);
+	EXPECT_EQ(std::string("10 40 50 30"), bst->to_string());
+	EXPECT_EQ(30, bst->get_head_value());
 
 	delete bst;
 }
