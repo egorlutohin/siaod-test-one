@@ -267,11 +267,92 @@ public:
 			goto_max(n->r);
 		}
 
+		MyBSTNode *max(MyBSTNode *t) {
+			if (t == NULL) {
+				return NULL;
+			}
+
+			while (t->r != NULL) {
+				t = t->r;
+			}
+
+			return t;
+		}
+
+		MyBSTNode *min(MyBSTNode *t) {
+			if (t == NULL) {
+				return NULL;
+			}
+
+			while (t->l != NULL) {
+				t = t->l;
+			}
+
+			return t;
+		}
+
+		MyBSTNode *r_parent(MyBSTNode *t, MyBSTNode *x) {
+			if (t == x) {
+				return NULL;
+			}
+
+			if (x->k > t->k) {
+				MyBSTNode *rp;
+				rp = r_parent(t->r, x);
+				if(rp != NULL) {
+					return rp;
+				} else {
+					return t;
+				}
+			} else {
+				return r_parent(t->l, x);
+			}
+		}
+
+		MyBSTNode *predcessor(MyBSTNode *r, MyBSTNode *x) {
+			if (x->l != NULL) {
+				return max(x->l);
+			} else {
+				return r_parent(r, x);
+			}
+		}
+
+		MyBSTNode *l_parent(MyBSTNode *t, MyBSTNode *x) {
+			if (t == x) {
+				return NULL;
+			}
+
+			if (x->k < t->k) {
+				MyBSTNode *rp;
+				rp = l_parent(t->l, x);
+				if(rp != NULL) {
+					return rp;
+				} else {
+					return t;
+				}
+			} else {
+				return l_parent(t->r, x);
+			}
+		}
+
+
+		MyBSTNode *successor(MyBSTNode *r, MyBSTNode *x) {
+			if(x->r != NULL) {
+				return min(x->r);
+			} else {
+				return l_parent(r, x);
+			}
+		}
+
 	public:
 		Iterator(MyBST<Key, Value> *t) {
 			this->bst = t;
 			this->current_node = this->bst->head;
 			this->bst_create_counter = this->bst->change_counter;
+		}
+
+		bool not_null() {
+			return !(this->current_node == NULL);
 		}
 
 		//доступ по чтению и записи к данным текущего узла в дереве
@@ -280,6 +361,10 @@ public:
 
 			if (this->bst->get_size() == 0) {
 				throw "Дерево пустое";
+			}
+
+			if (this->current_node == NULL) {
+				throw "Текущий элемент пустой";
 			}
 
 			return this->current_node->v;
@@ -295,6 +380,28 @@ public:
 		void goto_max() {
 			check_changes_in_bst();
 			goto_max(this->bst->head);
+		}
+
+		void previous() {
+			check_changes_in_bst();
+
+			if (this->current_node == NULL) {
+				return;
+			}
+
+			this->current_node = this->predcessor(this->bst->head, this->current_node);
+			return;
+		}
+
+		void next() {
+			check_changes_in_bst();
+
+			if(this->current_node == NULL) {
+				return;
+			}
+
+			this->current_node = this->successor(this->bst->head, this->current_node);
+			return;
 		}
 	};
 	friend Iterator;

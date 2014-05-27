@@ -311,3 +311,110 @@ TEST(IteratorTest, GoToMax) {
 	delete bst;
 }
 
+TEST(IteratorTest, Previous) {
+
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(40, 40);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+	bst->insert(25, 25);
+	bst->insert(35, 35);
+
+	MyBST<int, int>::Iterator *i = new MyBST<int, int>::Iterator(bst);
+
+	i->goto_max();
+	EXPECT_EQ(50, i->current_value());
+
+	i->previous();
+	EXPECT_EQ(40, i->current_value());
+
+	i->previous();
+	EXPECT_EQ(35, i->current_value());
+
+	i->previous();
+	EXPECT_EQ(30, i->current_value());
+
+	i->previous();
+	EXPECT_EQ(25, i->current_value());
+
+	i->previous();
+	EXPECT_EQ(20, i->current_value());
+
+	i->previous();
+	EXPECT_EQ(10, i->current_value());
+
+	i->previous();
+	EXPECT_THROW(i->current_value(), const char *);
+
+	i->previous();
+	EXPECT_THROW(i->current_value(), const char *);
+	i->previous();
+	EXPECT_THROW(i->current_value(), const char *);
+	i->previous();
+	EXPECT_THROW(i->current_value(), const char *);
+
+	delete i;
+	delete bst;
+}
+
+TEST(IteratorTest, LoopForward) {
+
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(40, 40);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+	bst->insert(25, 25);
+	bst->insert(35, 35);
+	bst->insert(5, 5);
+
+	MyBST<int, int>::Iterator *i = new MyBST<int, int>::Iterator(bst);
+
+	int arr[] = {5, 10, 20, 25, 30, 35, 40, 50}; // 0 .. 7
+	int c = 0;
+	i->goto_min();
+	while(i->not_null()) {
+		EXPECT_EQ(arr[c], i->current_value());
+		i->next();
+		c++;
+	}
+
+
+}
+
+TEST(IteratorTest, LoopBackward) {
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(40, 40);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+	bst->insert(25, 25);
+	bst->insert(35, 35);
+
+	MyBST<int, int>::Iterator *i = new MyBST<int, int>::Iterator(bst);
+
+	int arr[] = {50, 40, 35, 30, 25, 20, 10}; // 0 .. 6
+	int c;
+	i->goto_max();
+	for(c = 0; i->not_null(); i->previous(), c++) {
+		EXPECT_EQ(arr[c], i->current_value());
+	}
+
+	c = 0;
+	i->goto_max();
+	while(i->not_null()) {
+		EXPECT_EQ(arr[c++], i->current_value());
+		i->previous();
+	}
+
+	delete i;
+	delete bst;
+}
+
