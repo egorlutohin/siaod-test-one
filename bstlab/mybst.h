@@ -20,6 +20,7 @@ class MyBST {
 
 	MyBSTNode *head;
 	size_t size;
+	size_t change_counter;
 	size_t operation_counter;
 
 	Value &get_value(MyBSTNode *t, const Key &k) {
@@ -61,6 +62,7 @@ class MyBST {
 		clean(n->l);
 		clean(n->r);
 
+		this->change_counter++;
 		delete n;
 		this->size--;
 	}
@@ -90,6 +92,8 @@ class MyBST {
 		t0->v = t->v;
 
 		MyBSTNode *x = t->r;
+
+		this->change_counter++;
 		delete t;
 		this->size--;
 
@@ -122,6 +126,8 @@ class MyBST {
 			if(t == this->head) {
 				this->head = NULL;
 			}
+
+			this->change_counter++;
 			delete t;
 			this->size--;
 			return NULL;
@@ -132,8 +138,11 @@ class MyBST {
 			if (t == this->head) {
 				this->head = t->r;
 			}
+
+			this->change_counter++;
 			delete t;
 			this->size--;
+
 			return x;
 		}
 
@@ -142,6 +151,8 @@ class MyBST {
 			if (t == this->head) {
 				this->head = t->l;
 			}
+
+			this->change_counter++;
 			delete t;
 			this->size--;
 			return x;
@@ -230,19 +241,64 @@ public:
 	class Iterator {
 		MyBST<Key, Value> *bst;
 		MyBSTNode *current_node;
+		size_t bst_create_counter;
+
+		void check_changes_in_bst() {
+			if (this->bst->change_counter != this->bst_create_counter) {
+				throw "Изменилось дерево";
+			}
+		}
+
+		void goto_min(MyBSTNode *n) {
+			if (n == NULL) {
+				return;
+			}
+
+			this->current_node = n;
+			goto_min(n->l);
+		}
+
+		void goto_max(MyBSTNode *n) {
+			if (n == NULL) {
+				return;
+			}
+
+			this->current_node = n;
+			goto_max(n->r);
+		}
 
 	public:
-		//next();
-		Value& operator*() {
-			if (current_node = NULL) {
-				return (Value)0;
+		Iterator(MyBST<Key, Value> *t) {
+			this->bst = t;
+			this->current_node = this->bst->head;
+			this->bst_create_counter = this->bst->change_counter;
+		}
+
+		//доступ по чтению и записи к данным текущего узла в дереве
+		Value& current_value() {
+			check_changes_in_bst();
+
+			if (this->bst->get_size() == 0) {
+				throw "Дерево пустое";
 			}
-			else {
-				return current_node->v;
-			}
+
+			return this->current_node->v;
+		}
+
+		// установка на первый узел в дереве с минимальным ключом
+		void goto_min() {
+			check_changes_in_bst();
+			goto_min(this->bst->head);
+		}
+
+		//установка на последний узел в дереве с максимальным ключом
+		void goto_max() {
+			check_changes_in_bst();
+			goto_max(this->bst->head);
 		}
 	};
 	friend Iterator;
+
 };
 
 
@@ -277,6 +333,7 @@ typename MyBST<Key, Value>::MyBSTNode *MyBST<Key, Value>::insert(Key k, Value v,
 	if (root == NULL) {
 		iflag = true;
 		MyBSTNode *node = new MyBSTNode(k, v);
+		this->change_counter++;
 		return node;
 	}
 

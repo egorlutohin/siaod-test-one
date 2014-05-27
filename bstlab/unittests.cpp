@@ -230,3 +230,84 @@ TEST(MyBSTTest, GetOperationCounter) {
 	delete bst;
 }
 
+TEST(IteratorTest, CurrentValue) {
+	MyBST<int, int> *bst = new MyBST<int, int>();
+	MyBST<int, int>::Iterator *i = new MyBST<int, int>::Iterator(bst);
+
+	EXPECT_THROW(i->current_value(), const char *); // дерево пустое
+
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(40, 40);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+	bst->insert(25, 25);
+	bst->insert(35, 35);
+
+	EXPECT_THROW(i->current_value(), const char *); // дерево изменилось
+	delete i;
+
+	i = new MyBST<int, int>::Iterator(bst);
+	EXPECT_EQ(20, i->current_value());
+
+	delete i;
+}
+
+TEST(IteratorTest, GoToMin) {
+
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(40, 40);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+	bst->insert(25, 25);
+	bst->insert(35, 35);
+
+	MyBST<int, int>::Iterator *i = new MyBST<int, int>::Iterator(bst);
+
+	i->goto_min();
+	EXPECT_EQ(10, i->current_value());
+
+	bst->remove(20);
+	EXPECT_THROW(i->current_value(), const char *);
+
+	delete i;
+	i = new MyBST<int, int>::Iterator(bst);
+	i->goto_min();
+	EXPECT_EQ(10, i->current_value());
+
+	delete bst;
+	delete i;
+}
+
+TEST(IteratorTest, GoToMax) {
+	MyBST<int, int> *bst = new MyBST<int, int>();
+
+	bst->insert(20, 20);
+	bst->insert(10, 10);
+	bst->insert(40, 40);
+	bst->insert(30, 30);
+	bst->insert(50, 50);
+	bst->insert(25, 25);
+	bst->insert(35, 35);
+
+	MyBST<int, int>::Iterator *i = new MyBST<int, int>::Iterator(bst);
+	i->goto_max();
+	EXPECT_EQ(50, i->current_value());
+
+	bst->remove(10);
+	EXPECT_THROW(i->current_value(), const char *);
+
+	delete i;
+
+	bst->remove(50);
+	i = new MyBST<int, int>::Iterator(bst);
+	i->goto_max();
+	EXPECT_EQ(40, i->current_value());
+
+	delete i;
+	delete bst;
+}
+
