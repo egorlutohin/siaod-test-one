@@ -1,6 +1,9 @@
 #ifndef mybsth
 #define mybsth
 
+#include <iostream>
+#include <string>
+
 template <typename Key, typename Value>
 class MyBST {
 
@@ -177,21 +180,71 @@ class MyBST {
 		print(n->l, level + 1);
 	}
 
-	MyBSTNode *insert(Key, Value, MyBSTNode *, bool&);
+	MyBSTNode *insert(Key k, Value v, MyBST<Key, Value>::MyBSTNode *root, bool &iflag) {
+
+		this->operation_counter++;
+
+		if (root == NULL) {
+			iflag = true;
+			MyBSTNode *node = new MyBSTNode(k, v);
+			this->change_counter++;
+			return node;
+		}
+
+		if (k == root->k) {
+			iflag = false;
+			return root;
+		}
+
+		bool iresult;
+		if (k < root->k) {
+			root->l = this->insert(k, v, root->l, iresult);
+		} else {
+			root->r = this->insert(k, v, root->r, iresult);
+		}
+
+		iflag = iresult;
+		return root;
+	}
+
 
 public:
-	MyBST();
+	MyBST() {
+		this->head = NULL;
+		this->size = 0;
+		this->operation_counter = 0;
+	}
+
 	~MyBST() {
 		this->clean();
-	};
-	bool insert(Key, Value);
-	void clean();
+	}
+
+	bool insert(Key k, Value v) {
+		bool flag = false;
+		this->operation_counter = 0;
+		MyBSTNode *node = this->insert(k, v, this->head, flag);
+		if(this->head == NULL) {
+			this->head = node;
+		}
+
+		if (flag == true) {
+			this->size++;
+		}
+
+		return flag;
+	}
+
+	void clean() {
+		this->clean(this->head);
+		this->head = NULL;
+	}
+
 	bool remove(Key k) {
 		bool deleted;
 		this->operation_counter = 0;
 		this->remove(this->head, k, deleted);
 		return deleted;
-	};
+	}
 
 	size_t get_operation_counter() {
 		return this->operation_counter;
@@ -408,61 +461,4 @@ public:
 
 };
 
-
-template <typename Key, typename Value>
-MyBST<Key, Value>::MyBST() {
-	this->head = NULL;
-	this->size = 0;
-	this->operation_counter = 0;
-}
-
-template <typename Key, typename Value>
-bool MyBST<Key, Value>::insert(Key k, Value v) {
-	bool flag = false;
-	this->operation_counter = 0;
-	MyBSTNode *node = this->insert(k, v, this->head, flag);
-	if(this->head == NULL) {
-		this->head = node;
-	}
-
-	if (flag == true) {
-		this->size++;
-	}
-
-	return flag;
-}
-
-template <typename Key, typename Value>
-typename MyBST<Key, Value>::MyBSTNode *MyBST<Key, Value>::insert(Key k, Value v, MyBST<Key, Value>::MyBSTNode *root, bool &iflag) {
-
-	this->operation_counter++;
-
-	if (root == NULL) {
-		iflag = true;
-		MyBSTNode *node = new MyBSTNode(k, v);
-		this->change_counter++;
-		return node;
-	}
-
-	if (k == root->k) {
-		iflag = false;
-		return root;
-	}
-
-	bool iresult;
-	if (k < root->k) {
-		root->l = this->insert(k, v, root->l, iresult);
-	} else {
-		root->r = this->insert(k, v, root->r, iresult);
-	}
-
-	iflag = iresult;
-	return root;
-}
-
-template <typename Key, typename Value>
-void MyBST<Key, Value>::clean() {
-	this->clean(this->head);
-	this->head = NULL;
-}
 #endif

@@ -1,9 +1,9 @@
-all: unittests
+all: unittests test-speed
 help:
-	@echo "make unittests|clean"
+	@echo "make unittests|test-speed|clean"
 
-#test-speed: test-speed.cpp mylist.h
-	#g++ -g -o test-speed test-speed.cpp
+test-speed: test-speed.cpp mybst.h
+	g++ -g -Wall -o test-speed test-speed.cpp
 
 #test-menu: test-menu.cpp mylist.h
 #	g++ -g -o test-menu test-menu.cpp
